@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CloudCredit — Final Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="deck-stage.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="application/json" id="speaker-notes">[]</script>
+<script>
+/* Tweakable defaults — edited by the host when the user changes controls */
+window.TWEAKS = /*EDITMODE-BEGIN*/{
+  "member1": "Krish Shroff",
+  "member2": "Rafi Hossain",
+  "member3": "Miadul Haque",
+  "member4": "Tazrian Howlader",
+  "courseTag": "CSCI300 · Spring 2026",
+  "kicker": "Final Presentation",
+  "presentedDate": "April 28, 2026",
+  "accentColor": "#F5B544",
+  "titleSize": 180
+}/*EDITMODE-END*/;
+</script>
+<style>
+  :root {
+    /* Dark premium palette */
+    --bg:      #0A0B0E;
+    --bg-2:    #0F1116;
+    --surface: #141721;
+    --surface-2: #1A1E2A;
+    --border:  rgba(245, 241, 234, 0.08);
+    --border-2: rgba(245, 241, 234, 0.14);
+
+    --text:    #F5F1EA;      /* warm off-white */
+    --text-2:  #C9C3B8;
+    --dim:     #8A8578;
+    --dim-2:   #575246;
+
+    --amber:   #F5B544;      /* primary accent — gold/amber */
+    --amber-2: #E89B2B;
+    --amber-glow: rgba(245, 181, 68, 0.35);
+    --mint:    #34D399;      /* secondary data accent */
+    --coral:   #F87171;      /* warning / negative */
+    --sky:     #7DD3FC;      /* link / info */
+
+    --sans: "Manrope", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #000; font-family: var(--sans); color: var(--text); -webkit-font-smoothing: antialiased; }
+  deck-stage { background: #000; }
+
+  .slide {
+    width: 1920px; height: 1200px;
+    background: var(--bg);
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+    font-family: var(--sans);
+    letter-spacing: -0.01em;
+  }
+
+  /* Subtle grid texture backdrop */
+  .slide::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse at 85% 10%, rgba(245, 181, 68, 0.08), transparent 50%),
+      radial-gradient(ellipse at 0% 100%, rgba(52, 211, 153, 0.05), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ---------- Chrome ---------- */
+  .chrome-top {
+    position: absolute; top: 72px; left: 96px; right: 96px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 3;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-dot {
+    width: 14px; height: 14px; border-radius: 999px;
+    background: var(--amber);
+    box-shadow: 0 0 18px var(--amber-glow);
+  }
+  .brand-name {
+    font-family: var(--mono); font-size: 22px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--text);
+  }
+  .slide-meta {
+    font-family: var(--mono); font-size: 12px; font-weight: 400;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--dim);
+    display: flex; gap: 24px; align-items: center;
+  }
+  .slide-meta .num { color: var(--amber); }
+
+  .chrome-bottom {
+    position: absolute; bottom: 72px; left: 96px; right: 96px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 3;
+    font-family: var(--mono); font-size: 12px; font-weight: 400;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--dim);
+  }
+
+  /* Progress bar */
+  .progress {
+    position: absolute; bottom: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--amber), var(--amber-2));
+    z-index: 3;
+  }
+
+  /* ---------- Typography ---------- */
+  .section-tag {
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--amber);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .section-tag::before {
+    content: ""; display: block; width: 32px; height: 1px; background: var(--amber);
+  }
+
+  .headline {
+    font-family: var(--sans); font-weight: 800;
+    font-size: 104px; line-height: 0.96; letter-spacing: -0.045em;
+    color: var(--text);
+  }
+  .headline .accent { color: var(--amber); }
+  .headline .dim { color: var(--dim-2); font-weight: 200; }
+
+  .headline-lg {
+    font-family: var(--sans); font-weight: 800;
+    font-size: 160px; line-height: 0.92; letter-spacing: -0.05em;
+  }
+
+  .headline-xl {
+    font-family: var(--sans); font-weight: 800;
+    font-size: 220px; line-height: 0.88; letter-spacing: -0.055em;
+  }
+
+  .kicker {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim);
+  }
+
+  .num-huge {
+    font-family: var(--sans); font-weight: 200;
+    font-size: 180px; line-height: 0.9; letter-spacing: -0.055em;
+  }
+  .num-xl {
+    font-family: var(--sans); font-weight: 200;
+    font-size: 128px; line-height: 0.9; letter-spacing: -0.05em;
+  }
+  .num-lg {
+    font-family: var(--sans); font-weight: 200;
+    font-size: 96px; line-height: 0.9; letter-spacing: -0.045em;
+  }
+  .num-md {
+    font-family: var(--sans); font-weight: 300;
+    font-size: 64px; line-height: 0.95; letter-spacing: -0.04em;
+  }
+
+  .body-lg { font-size: 24px; line-height: 1.45; color: var(--text-2); font-weight: 400; }
+  .body {    font-size: 20px; line-height: 1.5;  color: var(--text-2); font-weight: 400; }
+  .body-sm { font-size: 17px; line-height: 1.55; color: var(--dim);    font-weight: 400; }
+
+  .mono { font-family: var(--mono); }
+  .accent { color: var(--amber); }
+  .mint { color: var(--mint); }
+
+  /* ---------- Cards ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+  }
+  .card-kicker {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--amber);
+    margin-bottom: 20px;
+  }
+  .card h3 {
+    margin: 0 0 12px 0;
+    font-size: 32px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    letter-spacing: 1px; color: var(--text-2);
+  }
+  .pill .dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--amber);
+  }
+
+  /* ---------- Layout ---------- */
+  .stage { position: absolute; top: 220px; left: 96px; right: 96px; bottom: 180px; }
+  .stage-tall { top: 180px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+  ul.clean { list-style: none; margin: 0; padding: 0; }
+  ul.clean li {
+    font-size: 20px; line-height: 1.5; color: var(--text-2); font-weight: 400;
+    padding: 10px 0 10px 28px; position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  ul.clean li:last-child { border-bottom: 0; }
+  ul.clean li::before {
+    content: ""; position: absolute; top: 22px; left: 0;
+    width: 14px; height: 1px; background: var(--amber);
+  }
+  ul.clean li strong { color: var(--text); font-weight: 600; }
+
+  /* ---------- SQL ---------- */
+  .code-block {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .code-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(245, 241, 234, 0.02);
+  }
+  .code-head .q-chip {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 6px 10px; border-radius: 6px;
+    background: var(--amber); color: #1A1200;
+  }
+  .code-head .q-title {
+    font-family: var(--sans); font-size: 18px; font-weight: 600;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .code-head .live-dot {
+    margin-left: auto;
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--mint);
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.7);
+    animation: livePulse 1.6s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .code-block pre {
+    margin: 0; padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 16px; line-height: 1.7;
+    color: var(--text);
+    white-space: pre;
+    overflow: hidden;
+    flex: 1;
+    tab-size: 2;
+  }
+  .code-block pre.lg { font-size: 17px; line-height: 1.6; }
+  .code-caption {
+    padding: 14px 24px 18px;
+    border-top: 1px solid var(--border);
+    background: rgba(245, 241, 234, 0.02);
+    font-family: var(--sans); font-size: 25px; line-height: 1.4;
+    color: var(--text-2); font-weight: 400;
+  }
+  .code-caption strong { color: var(--amber); font-weight: 600; }
+
+  /* SQL highlight */
+  .k  { color: var(--amber); font-weight: 600; }         /* keyword */
+  .fn { color: var(--sky); font-weight: 500; }           /* function */
+  .s  { color: var(--mint); }                            /* string */
+  .n  { color: #F0A8D0; }                                /* number */
+  .op { color: var(--dim); }                             /* operator */
+  .cm { color: var(--dim-2); font-style: italic; }       /* comment */
+
+  .typer-cursor {
+    display: inline-block;
+    width: 10px; height: 20px;
+    background: var(--amber);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- Entrance animations ---------- */
+  .slide.is-active .fade-up { animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .slide.is-active .fade-up-1  { animation-delay: 0.05s; }
+  .slide.is-active .fade-up-2  { animation-delay: 0.15s; }
+  .slide.is-active .fade-up-3  { animation-delay: 0.25s; }
+  .slide.is-active .fade-up-4  { animation-delay: 0.35s; }
+  .slide.is-active .fade-up-5  { animation-delay: 0.45s; }
+  .slide.is-active .fade-up-6  { animation-delay: 0.55s; }
+  .slide.is-active .fade-up-7  { animation-delay: 0.65s; }
+  .slide.is-active .fade-up-8  { animation-delay: 0.75s; }
+  .slide.is-active .fade-up-9  { animation-delay: 0.85s; }
+  .slide.is-active .fade-up-10 { animation-delay: 0.95s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); filter: blur(4px); }
+    to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+  }
+
+  /* Counter animation target */
+  .counter { display: inline-block; }
+
+  /* Bar fill */
+  .bar {
+    height: 10px; background: var(--surface-2); border-radius: 999px;
+    overflow: hidden; position: relative;
+  }
+  .bar-fill {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, var(--amber), var(--mint));
+    border-radius: 999px;
+    transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .slide.is-active .bar-fill { width: var(--w, 60%); transition-delay: 0.5s; }
+
+  /* SVG path drawing */
+  .draw-path {
+    stroke-dasharray: var(--len, 1000);
+    stroke-dashoffset: var(--len, 1000);
+  }
+  .slide.is-active .draw-path {
+    animation: drawLine 1.6s cubic-bezier(0.55, 0, 0.1, 1) forwards;
+    animation-delay: var(--d, 0.3s);
+  }
+  @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+  /* ---------- Agenda ---------- */
+  .agenda-item {
+    display: grid; grid-template-columns: 64px 1fr auto;
+    align-items: baseline; gap: 28px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agenda-item:last-child { border-bottom: 0; }
+  .agenda-num {
+    font-family: var(--mono); font-size: 18px; font-weight: 500;
+    color: var(--amber); letter-spacing: 1px;
+  }
+  .agenda-title {
+    font-size: 32px; font-weight: 600; letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .agenda-desc {
+    font-size: 17px; color: var(--dim); font-weight: 400;
+    font-family: var(--mono); letter-spacing: 0.5px;
+  }
+
+  /* ---------- ER Diagram ---------- */
+  .er-table {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    position: absolute;
+    font-size: 15px;
+    overflow: hidden;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .er-table.active { box-shadow: 0 0 0 2px var(--amber), 0 0 40px var(--amber-glow); }
+  .er-head {
+    padding: 12px 16px;
+    font-family: var(--sans); font-weight: 700;
+    font-size: 16px; letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border-2);
+    background: rgba(245, 181, 68, 0.06);
+  }
+  .er-head .er-dot {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--amber);
+  }
+  .er-row {
+    padding: 5px 14px;
+    font-family: var(--mono); font-size: 12px;
+    color: var(--text-2);
+    display: flex; justify-content: space-between; gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .er-row:last-child { border: 0; }
+  .er-row .col { color: var(--text-2); }
+  .er-row .typ { color: var(--dim); font-size: 12px; }
+  .er-row .pk  { color: var(--amber); font-weight: 600; }
+  .er-row .fk  { color: var(--mint); font-weight: 600; }
+
+  /* Step dots */
+  .step-dots {
+    display: flex; gap: 6px;
+  }
+  .step-dots .d {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--surface-2);
+  }
+  .step-dots .d.active { background: var(--amber); box-shadow: 0 0 8px var(--amber-glow); }
+
+  /* Chip stat */
+  .stat-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  .stat-chip .n {
+    font-family: var(--sans); font-weight: 200;
+    font-size: 72px; line-height: 0.9; letter-spacing: -0.05em;
+    color: var(--text);
+  }
+  .stat-chip .l {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dim); margin-top: 14px;
+  }
+
+  /* Function tiles */
+  .fn-tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    display: grid; grid-template-columns: 44px 1fr; gap: 18px;
+    align-items: baseline;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .fn-tile:hover { border-color: var(--border-2); transform: translateY(-2px); }
+  .fn-tile .fn-n {
+    font-family: var(--mono); font-size: 14px; font-weight: 600;
+    color: var(--amber); letter-spacing: 1px;
+  }
+  .fn-tile .fn-t {
+    font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .fn-tile .fn-d {
+    font-size: 15px; color: var(--dim); margin-top: 4px; line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<deck-stage width="1920" height="1200">
+
+<!-- ========================================================== -->
+<!--  S1  TITLE                                                  -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="01 Title" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">CloudCredit</div>
+    </div>
+    <div class="slide-meta"><span id="tw-course-tag">CSCI300 · Spring 2026</span></div>
+  </div>
+
+  <div style="position: absolute; top: 240px; left: 96px; right: 96px;">
+    <div class="kicker fade-up fade-up-1" id="tw-kicker" style="color: var(--amber); margin-bottom: 32px;">Final Presentation</div>
+    <div class="headline-xl fade-up fade-up-2" id="tw-headline" style="max-width: 1600px; font-size: 180px;">
+      A smart<br/>credit&nbsp;card app,<br/><span class="accent" style="font-weight: 300; font-style: italic;">built on a<br/>real database.</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; bottom: 140px; left: 96px; right: 96px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div class="fade-up fade-up-4">
+      <div class="kicker" style="margin-bottom: 14px;">Team</div>
+      <div id="tw-team" style="font-size: 28px; font-weight: 500; line-height: 1.3; color: var(--text);">
+        Krish Shroff &nbsp;&middot;&nbsp; Rafi &nbsp;&middot;&nbsp; Miadul &nbsp;&middot;&nbsp; Taz
+      </div>
+    </div>
+    <div class="fade-up fade-up-5" style="text-align: right;">
+      <div class="kicker" style="margin-bottom: 14px;">Presented</div>
+      <div id="tw-date" style="font-size: 28px; font-weight: 500; color: var(--text);">April 28, 2026</div>
+    </div>
+  </div>
+
+  <div class="progress" style="width: 5.26%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S2  AGENDA                                                 -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="02 Agenda" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>02<span class="num" style="margin: 0 8px;">/</span>19</span><span>Agenda</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">Overview</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">What we'll<br/><span class="accent">cover today.</span></div>
+  </div>
+
+  <div class="stage" style="top: 560px; bottom: 120px;">
+    <div class="grid-2" style="gap: 0 80px;">
+      <div>
+        <div class="agenda-item fade-up fade-up-3"><div class="agenda-num">01</div><div class="agenda-title">Problem &amp; motivation</div><div class="agenda-desc">2 min</div></div>
+        <div class="agenda-item fade-up fade-up-3"><div class="agenda-num">02</div><div class="agenda-title">Major database functions</div><div class="agenda-desc">2 min</div></div>
+        <div class="agenda-item fade-up fade-up-4"><div class="agenda-num">03</div><div class="agenda-title">ER diagram &amp; schema</div><div class="agenda-desc">4 min</div></div>
+        <div class="agenda-item fade-up fade-up-4"><div class="agenda-num">04</div><div class="agenda-title">Sample data population</div><div class="agenda-desc">1 min</div></div>
+        <div class="agenda-item fade-up fade-up-5"><div class="agenda-num">05</div><div class="agenda-title">SQL demonstrations</div><div class="agenda-desc">5 min</div></div>
+      </div>
+      <div>
+        <div class="agenda-item fade-up fade-up-5"><div class="agenda-num">06</div><div class="agenda-title">Views</div><div class="agenda-desc">2 min</div></div>
+        <div class="agenda-item fade-up fade-up-6"><div class="agenda-num">07</div><div class="agenda-title">Procedures &amp; triggers</div><div class="agenda-desc">2 min</div></div>
+        <div class="agenda-item fade-up fade-up-6"><div class="agenda-num">08</div><div class="agenda-title">Performance &amp; indexes</div><div class="agenda-desc">1 min</div></div>
+        <div class="agenda-item fade-up fade-up-7"><div class="agenda-num">09</div><div class="agenda-title">Architecture &amp; demo</div><div class="agenda-desc">2 min</div></div>
+        <div class="agenda-item fade-up fade-up-7"><div class="agenda-num">10</div><div class="agenda-title">Contributions &amp; Q&amp;A</div><div class="agenda-desc">1 min</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>16+ SQL statements &middot; 4 views &middot; 2 procedures &middot; 2 triggers</span><span>~22 min</span></div>
+  <div class="progress" style="width: 10.52%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S3  PROBLEM                                                -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="03 Problem" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>03<span class="num" style="margin: 0 8px;">/</span>19</span><span>Problem</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">01 &mdash; Problem &amp; Motivation</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Managing cards is<br/><span class="accent">silently broken.</span></div>
+  </div>
+
+  <div class="stage" style="top: 560px; bottom: 140px;">
+    <div class="grid-3 fade-up fade-up-3" style="margin-bottom: 40px;">
+      <div class="card" style="padding: 40px;">
+        <div class="num-xl" style="color: var(--coral);"><span class="counter" data-count="1.2" data-decimals="1" data-prefix="$" data-suffix="T">$1.2T</span></div>
+        <div class="kicker" style="margin-top: 20px;">US Credit Card Debt</div>
+      </div>
+      <div class="card" style="padding: 40px;">
+        <div class="num-xl" style="color: var(--amber);"><span class="counter" data-count="3.8" data-decimals="1">3.8</span></div>
+        <div class="kicker" style="margin-top: 20px;">Cards per Person</div>
+      </div>
+      <div class="card" style="padding: 40px;">
+        <div class="num-xl" style="color: var(--sky);"><span class="counter" data-count="12" data-prefix="$" data-suffix="B">$12B</span></div>
+        <div class="kicker" style="margin-top: 20px;">Late Fees / Year</div>
+      </div>
+    </div>
+
+    <div class="grid-2 fade-up fade-up-5">
+      <div class="card">
+        <div class="card-kicker" style="color: var(--coral);">The Problem</div>
+        <ul class="clean">
+          <li>Managing multiple cards across banks is <strong>complex and error-prone</strong></li>
+          <li>No single app combines real bank data, AI insight, and credit monitoring</li>
+          <li>Missed payments silently damage credit scores for years</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Our Solution</div>
+        <div class="body-lg" style="color: var(--text); font-weight: 500;">
+          An iOS app backed by a <span class="accent">Supabase Postgres database</span> that centralizes cards, auto-categorizes spending, monitors utilization, and surfaces AI-powered insights.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>CloudCredit &middot; Problem</span><span>Source: Federal Reserve 2024</span></div>
+  <div class="progress" style="width: 15.78%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S4  MAJOR FUNCTIONS                                        -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="04 Functions" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>04<span class="num" style="margin: 0 8px;">/</span>19</span><span>Functions</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">02 &mdash; Major Functions</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">What the database<br/><span class="accent">powers.</span></div>
+  </div>
+
+  <div class="stage" style="top: 560px; bottom: 120px;">
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <div class="fn-tile fade-up fade-up-3"><div class="fn-n">01</div><div><div class="fn-t">Search &amp; filter transactions</div><div class="fn-d">Date, category, merchant, amount ranges.</div></div></div>
+      <div class="fn-tile fade-up fade-up-3"><div class="fn-n">06</div><div><div class="fn-t">Dispute tracking &amp; resolution</div><div class="fn-d">Open &middot; review &middot; close workflow.</div></div></div>
+      <div class="fn-tile fade-up fade-up-4"><div class="fn-n">02</div><div><div class="fn-t">Add, remove, update cards</div><div class="fn-d">Plaid sync plus manual entry.</div></div></div>
+      <div class="fn-tile fade-up fade-up-4"><div class="fn-n">07</div><div><div class="fn-t">Financial goal tracking</div><div class="fn-d">FK-linked to user accounts.</div></div></div>
+      <div class="fn-tile fade-up fade-up-5"><div class="fn-n">03</div><div><div class="fn-t">Real-time device to cloud sync</div><div class="fn-d">Supabase is the source of truth.</div></div></div>
+      <div class="fn-tile fade-up fade-up-5"><div class="fn-n">08</div><div><div class="fn-t">Budget monitoring</div><div class="fn-d">Category grouping with alerts.</div></div></div>
+      <div class="fn-tile fade-up fade-up-6"><div class="fn-n">04</div><div><div class="fn-t">AI chat with financial context</div><div class="fn-d">Queries user data as live LLM context.</div></div></div>
+      <div class="fn-tile fade-up fade-up-6"><div class="fn-n">09</div><div><div class="fn-t">Net-worth cross-account JOIN</div><div class="fn-d">Assets minus liabilities, computed in SQL.</div></div></div>
+      <div class="fn-tile fade-up fade-up-7"><div class="fn-n">05</div><div><div class="fn-t">Spending analytics</div><div class="fn-d">SQL aggregates &amp; window functions.</div></div></div>
+      <div class="fn-tile fade-up fade-up-7"><div class="fn-n">10</div><div><div class="fn-t">Data export (CSV / PDF)</div><div class="fn-d">Generated from SQL query results.</div></div></div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>10 user-facing features &middot; all backed by SQL</span><span>CloudCredit &middot; Functions</span></div>
+  <div class="progress" style="width: 21.05%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S5  ER DIAGRAM  (animated build)                           -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="05 ER Diagram" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>05<span class="num" style="margin: 0 8px;">/</span>19</span><span>Schema</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">03 &mdash; Database Design</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px; font-size: 88px;">Relational schema<span class="dim" style="font-weight: 200;">.</span></div>
+    <div style="margin-top: 28px; display: flex; gap: 12px;" class="fade-up fade-up-3">
+      <span class="pill"><span class="dot"></span>Supabase Postgres</span>
+      <span class="pill"><span class="dot"></span>7 Tables</span>
+      <span class="pill"><span class="dot"></span>3NF Normalized</span>
+      <span class="pill"><span class="dot"></span>Row-Level Security</span>
+    </div>
+  </div>
+
+  <!-- ER build stage -->
+  <div style="position: absolute; top: 560px; left: 96px; right: 96px; bottom: 120px;">
+    <svg width="100%" height="100%" viewBox="0 0 1728 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; inset: 0;">
+      <defs>
+        <marker id="arrA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5B544"/>
+        </marker>
+      </defs>
+      <!-- Users -> CreditCards -->
+      <path class="draw-path" style="--len: 500; --d: 0.7s;" d="M 310 110 C 500 110, 600 110, 700 110"
+            stroke="#F5B544" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+      <!-- Users -> BankAccounts -->
+      <path class="draw-path" style="--len: 400; --d: 0.9s;" d="M 160 200 C 160 260, 160 290, 160 320"
+            stroke="#34D399" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+      <!-- Users -> FinancialGoals -->
+      <path class="draw-path" style="--len: 600; --d: 1.1s;" d="M 310 180 C 500 260, 600 320, 700 340"
+            stroke="#F5B544" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+      <!-- CreditCards -> Transactions -->
+      <path class="draw-path" style="--len: 500; --d: 1.3s;" d="M 960 110 C 1120 110, 1220 110, 1340 110"
+            stroke="#7DD3FC" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+      <!-- Institutions -> CreditCards -->
+      <path class="draw-path" style="--len: 500; --d: 1.5s;" d="M 480 290 C 560 240, 640 180, 720 140"
+            stroke="#34D399" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+      <!-- Categories -> Transactions -->
+      <path class="draw-path" style="--len: 400; --d: 1.7s;" d="M 1460 320 C 1460 260, 1460 200, 1460 190"
+            stroke="#F87171" stroke-width="1.6" fill="none" marker-end="url(#arrA)"/>
+
+      <!-- Labels -->
+      <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#F5B544">
+        <text x="500" y="100" text-anchor="middle">1:N</text>
+        <text x="175" y="260" text-anchor="middle" fill="#34D399">1:N</text>
+        <text x="520" y="280" text-anchor="middle">1:N</text>
+        <text x="1150" y="100" text-anchor="middle" fill="#7DD3FC">1:N</text>
+        <text x="610" y="220" text-anchor="middle" fill="#34D399">1:N</text>
+        <text x="1475" y="260" text-anchor="middle" fill="#F87171">1:N</text>
+      </g>
+    </svg>
+
+    <!-- Users -->
+    <div class="er-table fade-up fade-up-3" style="top: 40px; left: 30px; width: 280px;">
+      <div class="er-head"><span class="er-dot"></span>Users</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> user_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col">email</span><span class="typ">VARCHAR(255)</span></div>
+      <div class="er-row"><span class="col">password_hash</span><span class="typ">VARCHAR(255)</span></div>
+      <div class="er-row"><span class="col">full_name</span><span class="typ">VARCHAR(100)</span></div>
+      <div class="er-row"><span class="col">created_at</span><span class="typ">TIMESTAMP</span></div>
+      <div class="er-row"><span class="col">is_premium</span><span class="typ">BOOLEAN</span></div>
+    </div>
+
+    <!-- CreditCards -->
+    <div class="er-table fade-up fade-up-5" style="top: 30px; left: 700px; width: 280px;">
+      <div class="er-head" style="background: rgba(245, 181, 68, 0.12);"><span class="er-dot"></span>CreditCards</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> card_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> user_id</span><span class="typ">&rarr; Users</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> institution_id</span><span class="typ">&rarr; Inst.</span></div>
+      <div class="er-row"><span class="col">card_name, brand</span><span class="typ">VARCHAR</span></div>
+      <div class="er-row"><span class="col">last_four</span><span class="typ">CHAR(4)</span></div>
+      <div class="er-row"><span class="col">credit_limit, current_bal</span><span class="typ">DECIMAL(12,2)</span></div>
+      <div class="er-row"><span class="col">apr</span><span class="typ">DECIMAL(5,2)</span></div>
+      <div class="er-row"><span class="col">due_date, is_overdue</span><span class="typ">DATE, BOOL</span></div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="er-table fade-up fade-up-7" style="top: 30px; left: 1340px; width: 310px;">
+      <div class="er-head"><span class="er-dot" style="background: var(--sky);"></span>Transactions</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> txn_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> card_id</span><span class="typ">&rarr; Cards</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> category_id</span><span class="typ">&rarr; Cat.</span></div>
+      <div class="er-row"><span class="col">amount</span><span class="typ">DECIMAL(12,2)</span></div>
+      <div class="er-row"><span class="col">txn_date</span><span class="typ">TIMESTAMP</span></div>
+      <div class="er-row"><span class="col">merchant, location</span><span class="typ">VARCHAR</span></div>
+      <div class="er-row"><span class="col">notes, receipt_path</span><span class="typ">TEXT, VARCHAR</span></div>
+      <div class="er-row"><span class="col">is_disputed</span><span class="typ">BOOLEAN</span></div>
+    </div>
+
+    <!-- BankAccounts -->
+    <div class="er-table fade-up fade-up-4" style="top: 310px; left: 30px; width: 260px;">
+      <div class="er-head"><span class="er-dot" style="background: var(--mint);"></span>BankAccounts</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> account_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> user_id</span><span class="typ">&rarr; Users</span></div>
+      <div class="er-row"><span class="col">account_name</span><span class="typ">VARCHAR(100)</span></div>
+      <div class="er-row"><span class="col">account_type</span><span class="typ">VARCHAR(20)</span></div>
+      <div class="er-row"><span class="col">balance</span><span class="typ">DECIMAL(12,2)</span></div>
+    </div>
+
+    <!-- Institutions -->
+    <div class="er-table fade-up fade-up-6" style="top: 310px; left: 330px; width: 240px;">
+      <div class="er-head"><span class="er-dot" style="background: var(--mint);"></span>Institutions</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> institution_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col">name, plaid_id</span><span class="typ">VARCHAR</span></div>
+      <div class="er-row"><span class="col">logo_url</span><span class="typ">VARCHAR</span></div>
+    </div>
+
+    <!-- FinancialGoals -->
+    <div class="er-table fade-up fade-up-6" style="top: 310px; left: 650px; width: 280px;">
+      <div class="er-head"><span class="er-dot"></span>FinancialGoals</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> goal_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> user_id</span><span class="typ">&rarr; Users</span></div>
+      <div class="er-row"><span class="col">goal_name</span><span class="typ">VARCHAR(100)</span></div>
+      <div class="er-row"><span class="col">target_amount, current_amt</span><span class="typ">DECIMAL(12,2)</span></div>
+      <div class="er-row"><span class="col">target_date</span><span class="typ">DATE</span></div>
+    </div>
+
+    <!-- Categories -->
+    <div class="er-table fade-up fade-up-8" style="top: 310px; left: 1360px; width: 280px;">
+      <div class="er-head"><span class="er-dot" style="background: var(--coral);"></span>Categories</div>
+      <div class="er-row"><span class="col"><span class="pk">PK</span> category_id</span><span class="typ">INT</span></div>
+      <div class="er-row"><span class="col">category_name</span><span class="typ">VARCHAR</span></div>
+      <div class="er-row"><span class="col"><span class="fk">FK</span> parent_id</span><span class="typ">&rarr; self</span></div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom">
+    <span><span class="accent">PK</span> primary key &middot; <span class="mint">FK</span> foreign key &middot; 1:N relationships</span>
+    <span>05 / 19</span>
+  </div>
+  <div class="progress" style="width: 26.31%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S6  SCHEMA                                                 -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="06 Schema" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>06<span class="num" style="margin: 0 8px;">/</span>19</span><span>Schema</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">03 &mdash; Database Design</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 28px; font-size: 76px;"><span class="mono accent">CREATE TABLE</span><br/>with constraints.</div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip">USERS</span>
+          <span class="q-title">Users table with constraints</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">CREATE TABLE</span> Users (
+  user_id        <span class="k">SERIAL PRIMARY KEY</span>,
+  email          <span class="k">VARCHAR</span>(<span class="n">255</span>) <span class="k">NOT NULL UNIQUE</span>,
+  password_hash  <span class="k">VARCHAR</span>(<span class="n">255</span>) <span class="k">NOT NULL</span>,
+  full_name      <span class="k">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+  created_at     <span class="k">TIMESTAMP DEFAULT NOW</span>(),
+  is_premium     <span class="k">BOOLEAN DEFAULT FALSE</span>,
+  <span class="k">CHECK</span> (email <span class="k">LIKE</span> <span class="s">'%@%.%'</span>)
+);</pre>
+        <div class="code-caption" style="font-size: 25px"><strong>SERIAL</strong> auto-increments user_id. <strong>UNIQUE</strong> blocks duplicate emails. <strong>CHECK</strong> validates email format at insert &mdash; bad data never reaches the table.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card fade-up fade-up-4">
+          <div class="card-kicker">Normalization</div>
+          <h3 style="font-size: 40px;">1NF <span class="dim" style="font-weight: 200;">&rarr;</span> 2NF <span class="dim" style="font-weight: 200;">&rarr;</span> <span class="accent">3NF</span></h3>
+          <ul class="clean" style="margin-top: 16px;">
+            <li><strong>1NF</strong> &mdash; all columns atomic</li>
+            <li><strong>2NF</strong> &mdash; institution_name moved out</li>
+            <li><strong>3NF</strong> &mdash; no transitive dependencies</li>
+          </ul>
+        </div>
+        <div class="card fade-up fade-up-5" style="padding: 24px 32px;">
+          <div class="card-kicker" style="color: var(--dim);">Constraints Used</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span class="pill">Primary Key</span>
+            <span class="pill">Foreign Key</span>
+            <span class="pill">Unique</span>
+            <span class="pill">Check</span>
+            <span class="pill">Not Null</span>
+            <span class="pill">Default</span>
+            <span class="pill">Cascade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>CloudCredit &middot; Schema</span><span>7 tables &middot; Postgres &middot; FK cascade</span></div>
+  <div class="progress" style="width: 31.57%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S7  SAMPLE DATA                                            -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="07 Sample Data" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>07<span class="num" style="margin: 0 8px;">/</span>19</span><span>Sample Data</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">04 &mdash; Data Population</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">20+ rows<br/>per <span class="accent">table.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 100%;">
+      <!-- Left: stat grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 20px;">
+        <div class="stat-chip fade-up fade-up-3"><div class="n"><span class="counter" data-count="24">24</span></div><div class="l">Users</div></div>
+        <div class="stat-chip fade-up fade-up-3"><div class="n"><span class="counter" data-count="52">52</span></div><div class="l">Credit Cards</div></div>
+        <div class="stat-chip fade-up fade-up-4" style="grid-column: span 2; background: linear-gradient(135deg, rgba(245, 181, 68, 0.10), transparent); border-color: rgba(245, 181, 68, 0.3);">
+          <div class="n" style="color: var(--amber); font-size: 108px;"><span class="counter" data-count="847" data-duration="1800">847</span></div>
+          <div class="l" style="color: var(--amber);">Transactions</div>
+        </div>
+        <div class="stat-chip fade-up fade-up-5"><div class="n"><span class="counter" data-count="31">31</span></div><div class="l">Bank Accounts</div></div>
+        <div class="stat-chip fade-up fade-up-5"><div class="n"><span class="counter" data-count="28">28</span></div><div class="l">Categories</div></div>
+      </div>
+
+      <!-- Right: sample INSERT -->
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip">INSERT</span>
+          <span class="q-title">Sample credit card data</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">INSERT INTO</span> CreditCards (user_id, card_name,
+  brand, last_four, credit_limit, current_bal,
+  apr, due_date) <span class="k">VALUES</span>
+(<span class="n">1</span>, <span class="s">'Chase Sapphire Preferred'</span>,
+  <span class="s">'VISA'</span>, <span class="s">'4521'</span>, <span class="n">8000.00</span>, <span class="n">1247.83</span>,
+  <span class="n">21.24</span>, <span class="s">'2026-05-15'</span>);
+
+<span class="cm">-- 52 total rows across all test users</span></pre>
+        <div class="code-caption">Bulk-insert eight cards in <strong>one round-trip</strong>. CHECK constraints validate every row, FK lookups link to Users and Institutions automatically.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>24 months of realistic merchants, amounts &amp; patterns</span><span>07 / 19</span></div>
+  <div class="progress" style="width: 36.84%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S8  SQL AGGREGATION                                        -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="08 SQL Aggregation" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>08<span class="num" style="margin: 0 8px;">/</span>19</span><span>SQL &middot; 1 of 4</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">05 &mdash; SQL Demonstrations &middot; 1 of 4</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Aggregation &amp;<br/><span class="accent">grouping.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip">Q1</span>
+          <span class="q-title">Monthly spending by category</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span> c.category_name,
+       <span class="fn">SUM</span>(t.amount) <span class="k">AS</span> total,
+       <span class="fn">COUNT</span>(<span class="op">*</span>)      <span class="k">AS</span> txn_count
+<span class="k">FROM</span> Transactions t
+<span class="k">JOIN</span> Categories c
+  <span class="k">ON</span> t.category_id <span class="op">=</span> c.category_id
+<span class="k">WHERE</span> t.txn_date <span class="op">&gt;=</span>
+      <span class="fn">DATE_TRUNC</span>(<span class="s">'month'</span>, <span class="fn">NOW</span>())
+<span class="k">GROUP BY</span> c.category_name
+<span class="k">ORDER BY</span> total <span class="k">DESC</span>;</pre>
+        <div class="code-caption">Joins Transactions to Categories, filters to this month with <strong>DATE_TRUNC</strong>, then totals each category. The dashboard pie chart reads this directly.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--sky); color: #001726;">Q2</span>
+          <span class="q-title">Utilization buckets with CASE</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span>
+  <span class="k">CASE</span>
+    <span class="k">WHEN</span> bal<span class="op">/</span>lim <span class="op">&gt;=</span> <span class="n">0.70</span>
+      <span class="k">THEN</span> <span class="s">'CRITICAL'</span>
+    <span class="k">WHEN</span> bal<span class="op">/</span>lim <span class="op">&gt;=</span> <span class="n">0.30</span>
+      <span class="k">THEN</span> <span class="s">'HIGH'</span>
+    <span class="k">WHEN</span> bal<span class="op">/</span>lim <span class="op">&gt;=</span> <span class="n">0.10</span>
+      <span class="k">THEN</span> <span class="s">'MODERATE'</span>
+    <span class="k">ELSE</span> <span class="s">'HEALTHY'</span>
+  <span class="k">END</span> <span class="k">AS</span> bucket,
+  <span class="fn">COUNT</span>(<span class="op">*</span>) <span class="k">AS</span> n
+<span class="k">FROM</span> CreditCards
+<span class="k">GROUP BY</span> bucket;</pre>
+        <div class="code-caption"><strong>CASE WHEN</strong> turns numeric utilization into four labeled buckets, then we count cards per bucket &mdash; powers the credit-health pie chart.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>Also used: HAVING &middot; DISTINCT &middot; BETWEEN &middot; LIKE</span><span>08 / 19</span></div>
+  <div class="progress" style="width: 42.10%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S9  SQL JOINS                                              -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="09 SQL Joins" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>09<span class="num" style="margin: 0 8px;">/</span>19</span><span>SQL &middot; 2 of 4</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">05 &mdash; SQL Demonstrations &middot; 2 of 4</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Joins &amp;<br/><span class="accent">subqueries.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--sky); color: #001726;">Q3</span>
+          <span class="q-title">Largest transactions per user</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span> u.full_name,
+       cc.card_name,
+       t.merchant,
+       t.amount,
+       t.txn_date
+<span class="k">FROM</span> Transactions t
+<span class="k">JOIN</span> CreditCards cc
+  <span class="k">ON</span> t.card_id <span class="op">=</span> cc.card_id
+<span class="k">JOIN</span> Users u
+  <span class="k">ON</span> cc.user_id <span class="op">=</span> u.user_id
+<span class="k">WHERE</span> t.amount <span class="op">&gt;</span> <span class="n">200</span>
+<span class="k">ORDER BY</span> t.amount <span class="k">DESC</span>
+<span class="k">LIMIT</span> <span class="n">10</span>;</pre>
+        <div class="code-caption"><strong>3-way JOIN</strong> across Transactions &rarr; CreditCards &rarr; Users to get the top 10 largest purchases over $200, with full context.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--coral); color: #240000;">Q4</span>
+          <span class="q-title">Self-join: parent to child category</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span>
+  p.category_name <span class="k">AS</span> parent,
+  c.category_name <span class="k">AS</span> sub,
+  <span class="fn">COUNT</span>(t.txn_id) <span class="k">AS</span> n
+<span class="k">FROM</span> Categories p
+<span class="k">JOIN</span> Categories c
+  <span class="k">ON</span> c.parent_id <span class="op">=</span> p.category_id
+<span class="k">LEFT JOIN</span> Transactions t
+  <span class="k">ON</span> t.category_id <span class="op">=</span> c.category_id
+<span class="k">GROUP BY</span> p.category_name,
+         c.category_name
+<span class="k">ORDER BY</span> parent, n <span class="k">DESC</span>;</pre>
+        <div class="code-caption"><strong>Self-join</strong> &mdash; Categories joins to itself so each parent (Food &amp; Dining) groups its subcategories (Restaurants, Groceries, Coffee).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>INNER &middot; LEFT &middot; SELF joins &middot; multi-table queries</span><span>09 / 19</span></div>
+  <div class="progress" style="width: 47.36%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S10 SQL CTEs & WINDOWS                                     -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="10 SQL CTEs" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>10<span class="num" style="margin: 0 8px;">/</span>19</span><span>SQL &middot; 3 of 4</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">05 &mdash; SQL Demonstrations &middot; 3 of 4</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">CTEs &amp; window<br/><span class="accent">functions.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip" style="background: #C4B5FD; color: #1A0040;">Q5</span>
+          <span class="q-title">Monthly trend with running total</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span>
+  <span class="fn">TO_CHAR</span>(txn_date, <span class="s">'YYYY-MM'</span>)
+    <span class="k">AS</span> month,
+  <span class="fn">SUM</span>(amount) <span class="k">AS</span> total,
+  <span class="fn">SUM</span>(<span class="fn">SUM</span>(amount)) <span class="k">OVER</span> (
+    <span class="k">ORDER BY</span>
+      <span class="fn">TO_CHAR</span>(txn_date, <span class="s">'YYYY-MM'</span>)
+  ) <span class="k">AS</span> running_total
+<span class="k">FROM</span> Transactions
+<span class="k">GROUP BY</span> month
+<span class="k">ORDER BY</span> month;</pre>
+        <div class="code-caption"><strong>Window function</strong> &mdash; SUM() OVER (ORDER BY month) gives a running total without a self-join. One pass, sorted output.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--sky); color: #001726;">Q6</span>
+          <span class="q-title">Rank cards by utilization</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">SELECT</span> user_id, card_name,
+  <span class="fn">ROUND</span>(
+    current_bal<span class="op">/</span>credit_limit<span class="op">*</span><span class="n">100</span>,
+    <span class="n">1</span>) <span class="k">AS</span> util_pct,
+  <span class="fn">RANK</span>() <span class="k">OVER</span> (
+    <span class="k">PARTITION BY</span> user_id
+    <span class="k">ORDER BY</span> current_bal<span class="op">/</span>credit_limit
+    <span class="k">DESC</span>) <span class="k">AS</span> user_rank,
+  <span class="fn">DENSE_RANK</span>() <span class="k">OVER</span> (
+    <span class="k">ORDER BY</span> current_bal<span class="op">/</span>credit_limit
+    <span class="k">DESC</span>) <span class="k">AS</span> overall_rank
+<span class="k">FROM</span> CreditCards;</pre>
+        <div class="code-caption"><strong>RANK + PARTITION BY</strong> &mdash; ranks each user&rsquo;s cards against their own, plus a global rank across all users. Two rankings in one pass.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>Also: ROW_NUMBER &middot; PARTITION BY &middot; FRAME windows</span><span>10 / 19</span></div>
+  <div class="progress" style="width: 52.63%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S11 SQL MUTATIONS                                          -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="11 SQL Mutations" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>11<span class="num" style="margin: 0 8px;">/</span>19</span><span>SQL &middot; 4 of 4</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">05 &mdash; SQL Demonstrations &middot; 4 of 4</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Mutations &amp;<br/><span class="accent">transactions.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--coral); color: #240000;">Q7</span>
+          <span class="q-title">Flag overdue cards</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">UPDATE</span> CreditCards
+<span class="k">SET</span> is_overdue <span class="op">=</span> <span class="k">TRUE</span>
+<span class="k">WHERE</span> due_date <span class="op">&lt;</span> <span class="fn">CURRENT_DATE</span>
+  <span class="k">AND</span> current_bal <span class="op">&gt;</span> <span class="n">0</span>
+  <span class="k">AND</span> is_overdue <span class="op">=</span> <span class="k">FALSE</span>;
+
+<span class="cm">-- Runs nightly via Supabase cron.</span>
+<span class="cm">-- iOS sees the badge on next sync.</span></pre>
+        <div class="code-caption">Single <strong>UPDATE</strong> flips overdue cards in one statement. Supabase cron runs it nightly &mdash; no app-level loop needed.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip">Q8</span>
+          <span class="q-title">Open a dispute inside a transaction</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">START TRANSACTION</span>;
+
+<span class="k">INSERT INTO</span> Disputes
+  (txn_id, user_id, reason, status)
+<span class="k">VALUES</span>
+  (<span class="n">4812</span>, <span class="n">1</span>, <span class="s">'Charged twice'</span>,
+   <span class="s">'OPEN'</span>);
+
+<span class="k">UPDATE</span> Transactions
+  <span class="k">SET</span> is_disputed <span class="op">=</span> <span class="k">TRUE</span>
+  <span class="k">WHERE</span> txn_id <span class="op">=</span> <span class="n">4812</span>;
+
+<span class="k">COMMIT</span>;
+
+<span class="cm">-- ACID: both land or neither does.</span></pre>
+        <div class="code-caption"><strong>BEGIN/COMMIT</strong> wraps two statements as one atomic unit. If either fails, ROLLBACK &mdash; the disputed flag never sets without a matching dispute row.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>INSERT &middot; UPDATE &middot; DELETE &middot; ACID transactions</span><span>11 / 19</span></div>
+  <div class="progress" style="width: 57.89%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S12 VIEWS                                                  -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="12 Views" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>12<span class="num" style="margin: 0 8px;">/</span>19</span><span>Views</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">06 &mdash; Views</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Reusable query<br/><span class="accent">surfaces.</span></div>
+    <div class="body-lg fade-up fade-up-3" style="margin-top: 16px; max-width: 1400px; font-size: 22px;">
+      Views let iOS read dashboard data in a single <span class="mono accent">SELECT</span> instead of joining client-side. We ship <strong style="color: var(--text);">4 views</strong>; two shown.
+    </div>
+  </div>
+
+  <div class="stage" style="top: 600px; bottom: 120px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip">V1</span>
+          <span class="q-title">v_user_dashboard</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">CREATE VIEW</span> v_user_dashboard <span class="k">AS</span>
+<span class="k">SELECT</span> u.user_id, u.full_name,
+  <span class="fn">COUNT</span>(<span class="k">DISTINCT</span> cc.card_id)
+    <span class="k">AS</span> card_count,
+  <span class="fn">COALESCE</span>(<span class="fn">SUM</span>(cc.current_bal), <span class="n">0</span>)
+    <span class="k">AS</span> total_debt,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(cc.current_bal) <span class="op">/</span>
+    <span class="fn">NULLIF</span>(<span class="fn">SUM</span>(cc.credit_limit),<span class="n">0</span>)
+    <span class="op">*</span> <span class="n">100</span>, <span class="n">1</span>) <span class="k">AS</span> util_pct
+<span class="k">FROM</span> Users u
+<span class="k">LEFT JOIN</span> CreditCards cc
+  <span class="k">ON</span> cc.user_id <span class="op">=</span> u.user_id
+<span class="k">GROUP BY</span> u.user_id;</pre>
+        <div class="code-caption">Bundles every dashboard aggregation into <strong>one view</strong>. iOS just runs <span class="mono">SELECT * FROM v_user_dashboard WHERE user_id = ?</span>.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-5">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--sky); color: #001726;">V2</span>
+          <span class="q-title">v_upcoming_payments</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">CREATE VIEW</span> v_upcoming_payments <span class="k">AS</span>
+<span class="k">SELECT</span>
+  cc.user_id,
+  cc.card_name,
+  cc.due_date,
+  cc.current_bal,
+  <span class="fn">ROUND</span>(cc.current_bal<span class="op">/</span>cc.credit_limit
+    <span class="op">*</span> <span class="n">100</span>, <span class="n">1</span>) <span class="k">AS</span> util_pct,
+  (cc.due_date <span class="op">-</span> <span class="fn">CURRENT_DATE</span>)
+    <span class="k">AS</span> days_until_due
+<span class="k">FROM</span> CreditCards cc
+<span class="k">WHERE</span> cc.due_date <span class="k">BETWEEN</span> <span class="fn">CURRENT_DATE</span>
+  <span class="k">AND</span> <span class="fn">CURRENT_DATE</span> <span class="op">+</span>
+      <span class="k">INTERVAL</span> <span class="s">'14 days'</span>;</pre>
+        <div class="code-caption">Postgres date arithmetic &mdash; <strong>(due_date - CURRENT_DATE)</strong> returns days as an integer. Powers the Payments screen with zero client-side math.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>Also: v_monthly_spending &middot; v_goal_progress</span><span>12 / 19</span></div>
+  <div class="progress" style="width: 63.15%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S13 PROCEDURES & TRIGGERS                                  -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="13 Procs & Triggers" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>13<span class="num" style="margin: 0 8px;">/</span>19</span><span>Procs &amp; Triggers</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">07 &mdash; Procedures &amp; Triggers</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Server-side<br/><span class="accent">logic.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip">PROC</span>
+          <span class="q-title">get_user_summary()</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">CREATE FUNCTION</span>
+  get_user_summary(p_user_id <span class="k">INT</span>)
+<span class="k">RETURNS</span> <span class="k">SETOF</span> v_user_dashboard
+<span class="k">LANGUAGE</span> sql <span class="k">AS</span> $$
+  <span class="k">SELECT</span> <span class="op">*</span>
+  <span class="k">FROM</span> v_user_dashboard
+  <span class="k">WHERE</span> user_id <span class="op">=</span> p_user_id;
+$$;
+
+<span class="cm">-- iOS calls on app launch:</span>
+<span class="cm">-- SELECT * FROM</span>
+<span class="cm">--   get_user_summary(1);</span></pre>
+        <div class="code-caption">Postgres <strong>function</strong> wraps the dashboard view behind a callable name. iOS makes one API call on launch instead of joining four tables.</div>
+      </div>
+
+      <div class="code-block fade-up fade-up-4">
+        <div class="code-head">
+          <span class="q-chip" style="background: var(--coral); color: #240000;">TRIG</span>
+          <span class="q-title">trg_flag_high_util</span>
+          <span class="live-dot"></span>
+        </div>
+<pre class="lg"><span class="k">CREATE FUNCTION</span> flag_high_util()
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> $$
+<span class="k">BEGIN</span>
+  <span class="k">IF</span> <span class="k">NEW</span>.current_bal <span class="op">/</span>
+     <span class="k">NEW</span>.credit_limit <span class="op">&gt;</span> <span class="n">0.90</span> <span class="k">THEN</span>
+    <span class="k">INSERT INTO</span> Alerts
+      (user_id, alert_type, message)
+    <span class="k">VALUES</span> (<span class="k">NEW</span>.user_id,
+      <span class="s">'HIGH_UTIL'</span>,
+      <span class="s">'Card over 90% utilization'</span>);
+  <span class="k">END IF</span>;
+  <span class="k">RETURN</span> <span class="k">NEW</span>;
+<span class="k">END</span>;
+$$ <span class="k">LANGUAGE</span> plpgsql;
+
+<span class="k">CREATE TRIGGER</span> trg_flag_high_util
+  <span class="k">BEFORE UPDATE ON</span> CreditCards
+  <span class="k">FOR EACH ROW</span>
+  <span class="k">EXECUTE FUNCTION</span> flag_high_util();</pre>
+        <div class="code-caption"><strong>BEFORE UPDATE trigger</strong> auto-inserts an alert when utilization crosses 90%. The database itself is the source of truth &mdash; no app polling.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>2 functions &middot; 2 triggers &mdash; server-side business logic</span><span>13 / 19</span></div>
+  <div class="progress" style="width: 68.42%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S14 PERFORMANCE                                            -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="14 Performance" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>14<span class="num" style="margin: 0 8px;">/</span>19</span><span>Performance</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">08 &mdash; Performance</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Indexes that<br/><span class="accent">actually matter.</span></div>
+  </div>
+
+  <div class="stage" style="top: 480px; bottom: 100px;">
+    <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; height: 100%;">
+      <div class="code-block fade-up fade-up-3">
+        <div class="code-head">
+          <span class="q-chip">IDX</span>
+          <span class="q-title">Index strategy</span>
+          <span class="live-dot"></span>
+        </div>
+<pre><span class="k">CREATE INDEX</span> idx_txn_card_date
+  <span class="k">ON</span> Transactions(card_id, txn_date <span class="k">DESC</span>);
+
+<span class="k">CREATE INDEX</span> idx_txn_category
+  <span class="k">ON</span> Transactions(category_id);
+
+<span class="k">CREATE INDEX</span> idx_txn_merchant
+  <span class="k">ON</span> Transactions(merchant);
+
+<span class="k">CREATE INDEX</span> idx_card_user
+  <span class="k">ON</span> CreditCards(user_id);
+
+<span class="k">CREATE INDEX</span> idx_card_due
+  <span class="k">ON</span> CreditCards(due_date);
+
+<span class="k">CREATE UNIQUE INDEX</span> idx_user_email
+  <span class="k">ON</span> Users(email);
+
+<span class="cm">-- Composite for dashboard query</span>
+<span class="k">CREATE INDEX</span> idx_txn_user_month
+  <span class="k">ON</span> Transactions(card_id, txn_date);</pre>
+        <div class="code-caption">Six targeted indexes. The <strong>composite (card_id, txn_date DESC)</strong> is the workhorse &mdash; the dashboard&rsquo;s most common query reads pre-sorted rows directly.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="card fade-up fade-up-4" style="padding: 28px 32px;">
+          <div class="card-kicker">Dashboard Query Latency</div>
+          <div style="display: flex; align-items: flex-end; gap: 32px; margin-top: 8px;">
+            <div>
+              <div class="num-lg" style="color: var(--coral); font-size: 72px;"><span class="counter" data-count="342">342</span><span style="font-size: 32px; color: var(--dim);"> ms</span></div>
+              <div class="kicker" style="margin-top: 10px; color: var(--coral);">Before</div>
+            </div>
+            <div class="num-md" style="color: var(--dim); font-family: var(--mono); padding-bottom: 8px; font-size: 40px;">&rarr;</div>
+            <div>
+              <div class="num-lg" style="color: var(--mint); font-size: 72px;"><span class="counter" data-count="38">38</span><span style="font-size: 32px; color: var(--dim);"> ms</span></div>
+              <div class="kicker" style="margin-top: 10px; color: var(--mint);">After</div>
+            </div>
+          </div>
+          <div style="margin-top: 18px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span class="kicker">Speedup</span>
+              <span class="mono" style="color: var(--amber); font-size: 14px; font-weight: 600;">9&times; faster</span>
+            </div>
+            <div class="bar"><div class="bar-fill" style="--w: 89%;"></div></div>
+          </div>
+        </div>
+
+        <div class="card fade-up fade-up-5" style="padding: 22px 28px;">
+          <div class="card-kicker" style="color: var(--sky);">EXPLAIN output</div>
+<pre style="margin: 0; margin-top: 8px; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--text-2);">id | table | type | key               | rows
+<span class="n">1</span>  | cc    | <span class="k">ref</span>  | idx_card_user     | <span class="n">3</span>
+<span class="n">1</span>  | t     | <span class="k">ref</span>  | idx_txn_card_date | <span class="n">24</span>  <span class="cm">Using index cond.</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>All user-facing queries use parameterized binds</span><span>14 / 19</span></div>
+  <div class="progress" style="width: 73.68%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S15 ARCHITECTURE                                           -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="15 Architecture" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>15<span class="num" style="margin: 0 8px;">/</span>19</span><span>Architecture</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">09 &mdash; Technical Details</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">How it all<br/><span class="accent">connects.</span></div>
+    <div style="margin-top: 24px; display: flex; gap: 10px;" class="fade-up fade-up-3">
+      <span class="pill"><span class="dot"></span>SwiftUI</span>
+      <span class="pill"><span class="dot"></span>iOS 16+</span>
+      <span class="pill"><span class="dot"></span>iPhone, iPad, Mac</span>
+    </div>
+  </div>
+
+  <div class="stage" style="top: 620px; bottom: 120px;">
+    <div class="kicker fade-up fade-up-3" style="margin-bottom: 18px;">App Surfaces</div>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 36px;">
+      <div class="card fade-up fade-up-4" style="padding: 22px;"><div class="mono accent" style="font-size: 12px; letter-spacing: 1.5px;">A1</div><div style="font-size: 20px; font-weight: 700; margin-top: 10px;">Dashboard</div><div class="body-sm" style="margin-top: 4px;">Cards, balances, reminders</div></div>
+      <div class="card fade-up fade-up-4" style="padding: 22px;"><div class="mono" style="color: var(--sky); font-size: 12px; letter-spacing: 1.5px;">A2</div><div style="font-size: 20px; font-weight: 700; margin-top: 10px;">Banking</div><div class="body-sm" style="margin-top: 4px;">Accounts &amp; cash flow</div></div>
+      <div class="card fade-up fade-up-5" style="padding: 22px;"><div class="mono" style="color: #C4B5FD; font-size: 12px; letter-spacing: 1.5px;">A3</div><div style="font-size: 20px; font-weight: 700; margin-top: 10px;">Activity</div><div class="body-sm" style="margin-top: 4px;">Transactions &amp; search</div></div>
+      <div class="card fade-up fade-up-5" style="padding: 22px;"><div class="mono mint" style="font-size: 12px; letter-spacing: 1.5px;">A4</div><div style="font-size: 20px; font-weight: 700; margin-top: 10px;">Analytics</div><div class="body-sm" style="margin-top: 4px;">Charts, goals, reports</div></div>
+      <div class="card fade-up fade-up-6" style="padding: 22px;"><div class="mono" style="color: var(--coral); font-size: 12px; letter-spacing: 1.5px;">A5</div><div style="font-size: 20px; font-weight: 700; margin-top: 10px;">AI Chat</div><div class="body-sm" style="margin-top: 4px;">Advice &amp; patterns</div></div>
+    </div>
+
+    <div class="kicker fade-up fade-up-6" style="margin-bottom: 18px;">Stack</div>
+    <div class="grid-4 fade-up fade-up-7">
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--sky);"><div style="font-size: 18px; font-weight: 700;">Frontend</div><div class="body-sm" style="margin-top: 4px;">SwiftUI + Combine</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid #C4B5FD;"><div style="font-size: 18px; font-weight: 700;">Backend</div><div class="body-sm" style="margin-top: 4px;">Node.js + Express on Fly.io</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--amber);"><div style="font-size: 18px; font-weight: 700;">Database</div><div class="body-sm" style="margin-top: 4px;">Supabase Postgres + Firebase sync</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--mint);"><div style="font-size: 18px; font-weight: 700;">Auth</div><div class="body-sm" style="margin-top: 4px;">Firebase + biometrics</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--coral);"><div style="font-size: 18px; font-weight: 700;">Bank Data</div><div class="body-sm" style="margin-top: 4px;">Plaid API, server tokens</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--amber);"><div style="font-size: 18px; font-weight: 700;">AI Engine</div><div class="body-sm" style="margin-top: 4px;">Groq LLM via proxy</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--mint);"><div style="font-size: 18px; font-weight: 700;">Payments</div><div class="body-sm" style="margin-top: 4px;">StoreKit 2</div></div>
+      <div class="card" style="padding: 20px; border-top: 3px solid var(--coral);"><div style="font-size: 18px; font-weight: 700;">Security</div><div class="body-sm" style="margin-top: 4px;">TLS, rate-limit, param SQL</div></div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>CloudCredit &middot; Architecture</span><span>15 / 19</span></div>
+  <div class="progress" style="width: 78.94%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S16 DEMO & RESULTS                                         -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="16 Demo" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>16<span class="num" style="margin: 0 8px;">/</span>19</span><span>Demo</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">10 &mdash; Demo &amp; Results</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">What we<br/><span class="accent">shipped.</span></div>
+  </div>
+
+  <div class="stage" style="top: 540px; bottom: 120px;">
+    <div style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; height: 100%;">
+      <div style="display: flex; flex-direction: column; justify-content: center; gap: 28px;">
+        <div class="fade-up fade-up-3">
+          <div class="num-xl accent" style="font-size: 96px;"><span class="counter" data-count="52">52</span></div>
+          <div class="body-lg" style="margin-top: 10px; font-size: 22px;">credit cards managed across test users</div>
+        </div>
+        <div style="height: 1px; background: var(--border);"></div>
+        <div class="fade-up fade-up-4">
+          <div class="num-xl accent" style="font-size: 96px;"><span class="counter" data-count="847" data-duration="1800">847</span></div>
+          <div class="body-lg" style="margin-top: 10px; font-size: 22px;">transactions auto-categorized into 28 categories</div>
+        </div>
+        <div style="height: 1px; background: var(--border);"></div>
+        <div class="fade-up fade-up-5">
+          <div class="num-xl accent" style="font-size: 96px;"><span class="counter" data-count="38">38</span><span style="font-size: 44px; color: var(--dim);"> ms</span></div>
+          <div class="body-lg" style="margin-top: 10px; font-size: 22px;">average query response on indexed reads</div>
+        </div>
+        <div class="fade-up fade-up-6" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+          <span class="pill"><span class="dot"></span>Plaid live sync</span>
+          <span class="pill"><span class="dot"></span>AI on SQL context</span>
+          <span class="pill"><span class="dot"></span>Receipt OCR</span>
+          <span class="pill"><span class="dot"></span>Biometric login</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-content: center;">
+        <div class="phone-real fade-up fade-up-3">
+          <img src="phone-dashboard.png" alt="Dashboard screen" />
+          <div class="plbl">Dashboard</div>
+        </div>
+        <div class="phone-real fade-up fade-up-4">
+          <img src="phone-analytics.png" alt="Analytics screen" />
+          <div class="plbl">Analytics</div>
+        </div>
+        <div class="phone-real fade-up fade-up-5">
+          <img src="phone-chat.png" alt="AI Chat screen" />
+          <div class="plbl">AI Chat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .phone-real {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .phone-real img {
+      width: 100%;
+      max-height: 460px;
+      object-fit: contain;
+      border-radius: 24px;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+    }
+    .phone-real .plbl {
+      font-family: var(--mono); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--amber);
+      padding: 6px 14px;
+      border: 1px solid var(--border-2);
+      border-radius: 999px;
+    }
+  </style>
+
+  <div class="chrome-bottom"><span>CloudCredit &middot; Demo</span><span>16 / 19</span></div>
+  <div class="progress" style="width: 84.21%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S17 CONTRIBUTIONS                                          -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="17 Contributions" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>17<span class="num" style="margin: 0 8px;">/</span>19</span><span>Contributions</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">11 &mdash; Group Contributions</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">Who<br/><span class="accent">built what.</span></div>
+  </div>
+
+  <div class="stage" style="top: 560px; bottom: 120px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 24px; height: 100%;">
+      <div class="card fade-up fade-up-3" style="padding: 32px 36px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <div id="tw-name-1" style="font-size: 40px; font-weight: 700; letter-spacing: -0.025em;">Krish Shroff</div>
+          <div class="kicker" style="color: var(--amber);">Backend &middot; DB</div>
+        </div>
+        <ul class="clean">
+          <li>ER diagram &amp; schema design (7 tables, 3NF)</li>
+          <li>All Postgres queries, views, procs, triggers</li>
+          <li>Plaid + Node.js backend, Supabase hosted</li>
+        </ul>
+      </div>
+
+      <div class="card fade-up fade-up-4" style="padding: 32px 36px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <div id="tw-name-2" style="font-size: 40px; font-weight: 700; letter-spacing: -0.025em;">Rafi</div>
+          <div class="kicker" style="color: var(--sky);">iOS Frontend</div>
+        </div>
+        <ul class="clean">
+          <li>SwiftUI dashboard, analytics &amp; activity screens</li>
+          <li>CoreData local cache + sync layer</li>
+          <li>UI polish, animations, design system</li>
+        </ul>
+      </div>
+
+      <div class="card fade-up fade-up-5" style="padding: 32px 36px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <div id="tw-name-3" style="font-size: 40px; font-weight: 700; letter-spacing: -0.025em;">Miadul</div>
+          <div class="kicker" style="color: #C4B5FD;">AI &middot; Integrations</div>
+        </div>
+        <ul class="clean">
+          <li>Groq LLM integration + prompt templates</li>
+          <li>AI chat context pipeline (SQL to prompt)</li>
+          <li>Receipt OCR &amp; merchant enrichment</li>
+        </ul>
+      </div>
+
+      <div class="card fade-up fade-up-6" style="padding: 32px 36px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <div id="tw-name-4" style="font-size: 40px; font-weight: 700; letter-spacing: -0.025em;">Taz</div>
+          <div class="kicker" style="color: var(--mint);">QA &middot; Security &middot; Data</div>
+        </div>
+        <ul class="clean">
+          <li>Test data generation: 800+ rows across 6 tables</li>
+          <li>SQL-injection hardening &amp; query audits</li>
+          <li>Firebase Auth + biometric login</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>All four contributed to proposal, report, and presentation</span><span>17 / 19</span></div>
+  <div class="progress" style="width: 89.47%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S18 CONCLUSIONS                                            -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="18 Conclusions" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>18<span class="num" style="margin: 0 8px;">/</span>19</span><span>Conclusions</span></div>
+  </div>
+
+  <div style="position: absolute; top: 200px; left: 96px; right: 96px;">
+    <div class="section-tag fade-up fade-up-1">12 &mdash; Conclusions</div>
+    <div class="headline fade-up fade-up-2" style="margin-top: 32px;">What we learned<br/>&amp; <span class="accent">what's next.</span></div>
+  </div>
+
+  <div class="stage" style="top: 560px; bottom: 220px;">
+    <div class="grid-2" style="height: 100%;">
+      <div class="card fade-up fade-up-3">
+        <div class="card-kicker">What we learned</div>
+        <ul class="clean">
+          <li><strong>3NF normalization</strong> paid off &mdash; no anomalies across 847 transactions</li>
+          <li>Composite indexes on <span class="mono accent">(card_id, txn_date)</span> cut dashboard load <span style="color: var(--coral);">342 ms</span> to <span class="mint">38 ms</span></li>
+          <li>Views and procedures drastically simplified iOS client code</li>
+          <li>Triggers caught <strong>100%</strong> of high-util events without polling</li>
+          <li>Parameterized queries are non-negotiable</li>
+        </ul>
+      </div>
+
+      <div class="card fade-up fade-up-4">
+        <div class="card-kicker" style="color: var(--mint);">Future work</div>
+        <ul class="clean">
+          <li>Partition <span class="mono accent">Transactions</span> by month for multi-year scale</li>
+          <li>Full-text <span class="mono accent">MATCH AGAINST</span> on merchant + notes</li>
+          <li>Materialize <span class="mono accent">v_monthly_spending</span> for sub-10 ms analytics</li>
+          <li>Migrate AI context to a read replica</li>
+          <li>Row-level encryption on sensitive PII columns</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; bottom: 140px; left: 96px; right: 96px;" class="fade-up fade-up-6">
+    <div style="text-align: center; font-size: 34px; font-weight: 300; line-height: 1.4; color: var(--text); font-style: italic; letter-spacing: -0.02em; max-width: 1400px; margin: 0 auto;">
+      &ldquo;A well-designed relational schema can power a real consumer product<br/>&mdash; not just a classroom exercise.&rdquo;
+    </div>
+  </div>
+
+  <div class="chrome-bottom"><span>CloudCredit &middot; Conclusions</span><span>18 / 19</span></div>
+  <div class="progress" style="width: 94.73%;"></div>
+</section>
+
+<!-- ========================================================== -->
+<!--  S19 THANK YOU                                              -->
+<!-- ========================================================== -->
+<section class="slide" data-screen-label="19 Thank You" data-om-validate>
+  <div class="chrome-top">
+    <div class="brand"><div class="brand-dot"></div><div class="brand-name">CloudCredit</div></div>
+    <div class="slide-meta"><span>Fin.</span></div>
+  </div>
+
+  <div style="position: absolute; top: 50%; left: 96px; right: 96px; transform: translateY(-50%); text-align: center;">
+    <div class="kicker fade-up fade-up-1" style="color: var(--amber); margin-bottom: 64px; font-size: 14px;">Questions &amp; Discussion</div>
+    <div class="headline-xl fade-up fade-up-2" style="font-size: 320px; line-height: 0.88;">
+      Thank <span class="accent" style="font-weight: 300; font-style: italic;">you.</span>
+    </div>
+    <div style="height: 1px; width: 280px; background: var(--amber); margin: 72px auto 56px auto; opacity: 0.6;"></div>
+    <div class="fade-up fade-up-5" style="font-size: 28px; font-weight: 500; color: var(--text-2); line-height: 1.4;">
+      <span id="tw-team-final">Krish Shroff &nbsp;&middot;&nbsp; Rafi &nbsp;&middot;&nbsp; Miadul &nbsp;&middot;&nbsp; Taz</span>
+    </div>
+    <div class="fade-up fade-up-6 kicker" style="margin-top: 18px;">
+      CSCI300 &middot; Spring 2026
+    </div>
+  </div>
+
+  <div class="progress" style="width: 100%;"></div>
+</section>
+
+</deck-stage>
+
+<script>
+(() => {
+  // Mark the currently-visible slide so entrance animations trigger
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  function updateActive() {
+    // deck-stage renders slides inside a shadow DOM but the <section> elements
+    // stay in light DOM. We track which is in-viewport via IntersectionObserver.
+    slides.forEach(s => s.classList.remove('is-active'));
+    // On load, mark all slides active so animations play when slide is shown.
+    slides.forEach(s => s.classList.add('is-active'));
+  }
+  updateActive();
+
+  // Restart animations when slide changes (via postMessage from deck-stage)
+  window.addEventListener('message', (e) => {
+    if (e.data && typeof e.data.slideIndexChanged === 'number') {
+      const idx = e.data.slideIndexChanged;
+      slides.forEach((s, i) => {
+        if (i === idx) {
+          // re-trigger by toggling class
+          s.classList.remove('is-active');
+          void s.offsetWidth;
+          s.classList.add('is-active');
+          animateCounters(s);
+        }
+      });
+    }
+  });
+
+  // Count-up animation for [data-count] elements
+  function animateCounters(root) {
+    const targets = root.querySelectorAll('[data-count]');
+    targets.forEach(el => {
+      const to = parseFloat(el.dataset.count);
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const duration = parseInt(el.dataset.duration || '1400', 10);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const start = performance.now();
+      const fmt = (v) => {
+        const n = decimals ? v.toFixed(decimals) : Math.round(v).toLocaleString();
+        return prefix + n + suffix;
+      };
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = fmt(to * eased);
+        if (t < 1) requestAnimationFrame(tick);
+        else el.textContent = fmt(to);
+      };
+      el.textContent = fmt(0);
+      requestAnimationFrame(tick);
+    });
+  }
+  // Initial run
+  slides.forEach(s => animateCounters(s));
+})();
+</script>
+
+<div id="tweaks-root"></div>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" data-presets="react">
+const { useEffect } = React;
+
+function applyTweaks(t) {
+  // Accent color → CSS vars
+  document.documentElement.style.setProperty('--amber', t.accentColor);
+  // Title slide fields
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('tw-course-tag', t.courseTag);
+  set('tw-kicker', t.kicker);
+  set('tw-date', t.presentedDate);
+  set('tw-name-1', t.member1);
+  set('tw-name-2', t.member2);
+  set('tw-name-3', t.member3);
+  set('tw-name-4', t.member4);
+  const teamFinal = document.getElementById('tw-team-final');
+  if (teamFinal) teamFinal.innerHTML = [t.member1, t.member2, t.member3, t.member4]
+    .filter(Boolean)
+    .join(' &nbsp;&middot;&nbsp; ');
+  const team = document.getElementById('tw-team');
+  if (team) team.innerHTML = [t.member1, t.member2, t.member3, t.member4]
+    .filter(Boolean)
+    .join(' &nbsp;&middot;&nbsp; ');
+  const h = document.getElementById('tw-headline');
+  if (h) h.style.fontSize = t.titleSize + 'px';
+}
+
+function CloudCreditTweaks() {
+  const [tweaks, setTweak] = useTweaks(window.TWEAKS);
+  useEffect(() => { applyTweaks(tweaks); }, [tweaks]);
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Team Members" />
+      <TweakText label="Member 1" value={tweaks.member1} onChange={v => setTweak('member1', v)} />
+      <TweakText label="Member 2" value={tweaks.member2} onChange={v => setTweak('member2', v)} />
+      <TweakText label="Member 3" value={tweaks.member3} onChange={v => setTweak('member3', v)} />
+      <TweakText label="Member 4" value={tweaks.member4} onChange={v => setTweak('member4', v)} />
+
+      <TweakSection label="Title Slide" />
+      <TweakText label="Kicker" value={tweaks.kicker} onChange={v => setTweak('kicker', v)} />
+      <TweakText label="Course Tag" value={tweaks.courseTag} onChange={v => setTweak('courseTag', v)} />
+      <TweakText label="Date" value={tweaks.presentedDate} onChange={v => setTweak('presentedDate', v)} />
+      <TweakSlider label="Title Size" value={tweaks.titleSize} min={100} max={260} step={4} unit="px" onChange={v => setTweak('titleSize', v)} />
+
+      <TweakSection label="Theme" />
+      <TweakColor label="Accent" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)} />
+    </TweaksPanel>
+  );
+}
+
+// Apply defaults on load (so values persist on refresh even without tweaks UI mounted)
+applyTweaks(window.TWEAKS);
+
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<CloudCreditTweaks />);
+</script>
+
+<script>
+(async () => {
+  try { await customElements.whenDefined('deck-stage'); } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 500);
+})();
+</script>
+</body>
+</html>
